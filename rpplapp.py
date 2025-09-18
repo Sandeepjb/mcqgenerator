@@ -6,8 +6,8 @@ import PyPDF2
 from dotenv import load_dotenv
 from src.mcqgenerator.utils import read_file,get_table_data
 import streamlit as st
-from src.mcqgenerator import generate_evaluate_chain
-from StreamlitApp import generate_evaluate_chain
+from src.mcqgenerator.MCQGenerator import generate_evaluate_chain
+from src.mcqgenerator.MCQGenerator import generate_evaluate_chain
 from src.mcqgenerator.logger import logging
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import SequentialChain
@@ -19,11 +19,15 @@ from langchain.callbacks import get_openai_callback
 
 #loading json file
 
-with open('response.json', 'r') as file:
-       RESPONSE_JSON = json.load(file)
+with open('Response.json', 'r') as file:
+ RESPONSE_JSON = json.load(file)
+
+
+#load environment variables
 
 #creating a title for the app
-st.title("MCQ Application Powered By Rudaya Powers Pvt Ltd 🦜⛓️")
+st.image("industru-focus.png", width=100)
+st.title("Rudaya Powers MCQ Application 🦜⛓️")
 
 #Create a form using st.form
 with st.form("user_inputs"):
@@ -75,13 +79,15 @@ with st.form("user_inputs"):
                     quiz=response.get("quiz", None)
                     if quiz is not None:
                         table_data=get_table_data(quiz)
+                        #Display the quiz data in a table
+                        #st.write(table_data)
+                        
                         if table_data is not None:
                             df=pd.DataFrame(table_data)
                             df.index=df.index+1
                             st.table(df)
-                            #Display the review in atext box as well
-                            st.text_area(label="Review", value=response["review"])
                         else:
                             st.error("Error in the table data")
+
                 else:
                     st.write(response)
